@@ -1,24 +1,24 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useState } from 'react';
 import { saveProfessor } from '@/app/actions/professorActions';
-import { professorSchema } from '@/lib/schemas/professorSchema';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { MultiSelect } from '@/components/ui/multi-select';
 import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
+import { professorSchema } from '@/lib/schemas/professorSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 
 type ProfessorFormData = z.infer<typeof professorSchema>;
@@ -33,9 +33,19 @@ const daysOfWeek = [
     { value: '6', label: 'جمعه' },
 ];
 
+const defaultValues: ProfessorFormData = {
+  name: '',
+  days: [],
+  mobile: '',
+  nationalCode:'',
+  preferDays: [],
+  courses: []
+}
+
 export default function ProfessorForm() {
     const formHook = useForm<ProfessorFormData>({
         resolver: zodResolver(professorSchema),
+        defaultValues,
     });
 
     const { register, handleSubmit, formState: { errors }, setValue } = formHook;
@@ -51,6 +61,8 @@ export default function ProfessorForm() {
         formData.append('mobile', data.mobile ?? '');
         formData.append('preferDays', JSON.stringify(data.preferDays));
         formData.append('days', JSON.stringify(data.days));
+
+        console.log({ data });
 
         const result = await saveProfessor(formData);
 
@@ -115,7 +127,8 @@ export default function ProfessorForm() {
                                 <MultiSelect
                                     placeholder='Preferred Days'
                                     options={daysOfWeek}
-                                    onValueChange={(value) => field.onChange(value?.map(v => +v))}
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
                                     variant='inverted'
                                     selectAllOption={false}
                                     animation={2}
@@ -152,24 +165,33 @@ export default function ProfessorForm() {
                     <FormLabel>Teaching Days Schedule</FormLabel>
                     {schedule.map((s, index) => (
                         <div key={index} className='schedule-item'>
-                            <Select>
-                                <SelectTrigger className='w-[180px]'>
-                                    <SelectValue placeholder='Select a day' />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectLabel>days</SelectLabel>
-                                        {daysOfWeek.map(day => (
-                                            <SelectItem
-                                                key={day.value}
-                                                value={day.value}
-                                            >
-                                                {day.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
+                          <FormField
+                          control={formHook.control}
+                          name={`days.${index}.day`}
+                          render={({ field })=>(
+                            <>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <SelectTrigger className='w-[180px]'>
+                                      <SelectValue placeholder='Select a day' />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                      <SelectGroup>
+                                          <SelectLabel>days</SelectLabel>
+                                          {daysOfWeek.map(day => (
+                                              <SelectItem
+                                                  key={day.value}
+                                                  value={day.value}
+                                              >
+                                                  {day.label}
+                                              </SelectItem>
+                                          ))}
+                                      </SelectGroup>
+                                  </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </>
+                          )}
+                          />
                             <Input {...register(`days.${index}.startTime`)} placeholder='Start Time (HH:mm)' />
                             <Input {...register(`days.${index}.endTime`)} placeholder='End Time (HH:mm)' />
                             {errors.days?.[index]?.startTime &&

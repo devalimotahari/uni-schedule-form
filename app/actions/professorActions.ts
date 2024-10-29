@@ -1,8 +1,8 @@
 'use server';
 
-import { v4 as uuidv4 } from 'uuid';
 import { professorSchema } from '@/lib/schemas/professorSchema';
 import { sql } from '@vercel/postgres';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function saveProfessor(formData: FormData) {
     try {
@@ -10,11 +10,11 @@ export async function saveProfessor(formData: FormData) {
             name: formData.get('name') as string,
             nationalCode: formData.get('nationalCode') as string,
             mobile: formData.get('mobile') as string,
-            preferDays: formData.getAll('preferDays').map(Number),
+            preferDays: formData.getAll('preferDays'),
             days: JSON.parse(formData.get('days') as string),
             courses: formData.getAll('courses'),
         };
-
+        console.log({ professorData });
         const validatedData = professorSchema.parse(professorData);
 
         await sql.query(
