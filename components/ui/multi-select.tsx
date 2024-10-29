@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { CheckIcon, ChevronDown, WandSparkles, XCircle, XIcon } from 'lucide-react';
+import { CheckIcon, ChevronDown, XCircle, XIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
@@ -213,11 +213,11 @@ export const MultiSelect = React.forwardRef<
                                                 style={{ animationDuration: `${animation}s` }}
                                             >
                                                 {IconComponent && (
-                                                    <IconComponent className='h-4 w-4 mr-2' />
+                                                    <IconComponent className='h-4 w-4 me-2' />
                                                 )}
                                                 {option?.label}
                                                 <XCircle
-                                                    className='ml-2 h-4 w-4 cursor-pointer'
+                                                    className='ms-2 h-4 w-4 cursor-pointer'
                                                     onClick={(event) => {
                                                         event.stopPropagation();
                                                         toggleOption(value);
@@ -237,7 +237,7 @@ export const MultiSelect = React.forwardRef<
                                         >
                                             {`+ ${selectedValues.length - maxCount} more`}
                                             <XCircle
-                                                className='ml-2 h-4 w-4 cursor-pointer'
+                                                className='ms-2 h-4 w-4 cursor-pointer'
                                                 onClick={(event) => {
                                                     event.stopPropagation();
                                                     clearExtraOptions();
@@ -292,7 +292,7 @@ export const MultiSelect = React.forwardRef<
                                     >
                                         <div
                                             className={cn(
-                                                'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+                                                'me-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
                                                 selectedValues.length === options.length
                                                     ? 'bg-primary text-primary-foreground'
                                                     : 'opacity-50 [&_svg]:invisible',
@@ -313,7 +313,7 @@ export const MultiSelect = React.forwardRef<
                                         >
                                             <div
                                                 className={cn(
-                                                    'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+                                                    'me-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
                                                     isSelected
                                                         ? 'bg-primary text-primary-foreground'
                                                         : 'opacity-50 [&_svg]:invisible',
@@ -322,7 +322,7 @@ export const MultiSelect = React.forwardRef<
                                                 <CheckIcon className='h-4 w-4' />
                                             </div>
                                             {option.icon && (
-                                                <option.icon className='mr-2 h-4 w-4 text-muted-foreground' />
+                                                <option.icon className='me-2 h-4 w-4 text-muted-foreground' />
                                             )}
                                             <span>{option.label}</span>
                                         </CommandItem>
@@ -357,7 +357,7 @@ export const MultiSelect = React.forwardRef<
                         </CommandList>
                     </Command>
                 </PopoverContent>
-                {animation > 0 && selectedValues.length > 0 && (
+                {/*{animation > 0 && selectedValues.length > 0 && (
                     <WandSparkles
                         className={cn(
                             'cursor-pointer my-2 text-foreground bg-background w-3 h-3',
@@ -365,7 +365,7 @@ export const MultiSelect = React.forwardRef<
                         )}
                         onClick={() => setIsAnimating(!isAnimating)}
                     />
-                )}
+                )}*/}
             </Popover>
         );
     },
